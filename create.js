@@ -25,8 +25,6 @@ program
   .action(() => {
     const componentNames = minimist(process.argv.slice(3))._
     require('./lib/createFolder')(componentNames)
-    require('./lib/packageAndExampleList')
-    require('./lib/entry')
   })
 
 // 创建入口文件
