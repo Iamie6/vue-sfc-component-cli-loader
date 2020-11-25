@@ -7,10 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Iamie6/vue-sfc-component-cli-loader.git"
-  },
   "keywords": [
     "vue",
     "sfc",
@@ -20,10 +16,6 @@
   ],
   "author": "igetter",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Iamie6/vue-sfc-component-cli-loader/issues"
-  },
-  "homepage": "https://github.com/Iamie6/vue-sfc-component-cli-loader#readme",
   "engines": {
     "node": ">=8.9"
   },
