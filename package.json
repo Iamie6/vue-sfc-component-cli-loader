@@ -1,0 +1,47 @@
+{
+  "name": "vue-sfc-component-cli-loader",
+  "version": "0.0.1",
+  "description": "vue单文件组件开发脚手架webpack-loader",
+  "main": "index.js",
+  "bin": "create.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iamie6/vue-sfc-component-cli-loader.git"
+  },
+  "keywords": [
+    "vue",
+    "sfc",
+    "component",
+    "cli",
+    "loader"
+  ],
+  "author": "igetter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Iamie6/vue-sfc-component-cli-loader/issues"
+  },
+  "homepage": "https://github.com/Iamie6/vue-sfc-component-cli-loader#readme",
+  "engines": {
+    "node": ">=8.9"
+  },
+  "dependencies": {
+    "@vue/component-compiler-utils": "^3.2.0",
+    "@vuese/markdown-render": "^2.11.0",
+    "@vuese/parser": "^2.10.0",
+    "axios": "^0.21.0",
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "highlight.js": "^10.4.0",
+    "json-templater": "^1.2.0",
+    "marked": "^1.2.5",
+    "minimist": "^1.2.5",
+    "node-watch": "^0.7.0",
+    "semver": "^7.3.2",
+    "uppercamelcase": "^3.0.0",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "devDependencies": {}
+}
