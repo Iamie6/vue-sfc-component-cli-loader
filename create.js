@@ -15,6 +15,7 @@ function checkNodeVersion (wanted) {
 
 checkNodeVersion(requiredVersion)
 
+const fs = require('fs')
 const minimist = require('minimist')
 const program = require('commander')
 
@@ -46,14 +47,37 @@ program
 
 // 获取mock数据
 program
-  .command('getMock')
-  .description('get mock data from examples by cli')
+  .command('getInfo')
+  .description('get data from "packages/example & packages/src/index.vue" folder by cli')
   .action(() => {
     const getMockData = require('./lib/getMockData')
-    const mock = getMockData('./packages/baseButton/example/exampleOfPosition.vue')
-    console.log(mock)
+    const getProps = require('./lib/getProps.js')
+
+    const components = fs.readdirSync('./packages').filter(folderName => {
+      if (/^\./.test(folderName)) {
+        return false
+      }
+      return true
+    })
+    components.map(component => {
+      const example = fs.readdirSync(`./packages/${component}/example`)[0]
+      const mock = getMockData(`./packages/${component}/example/${example}`)
+      const props = getProps(`./packages/${component}/src/index.vue`)
+      fs.writeFileSync(`./dist/uploadInfo/props-${component}.json`, JSON.stringify(props))
+      fs.writeFileSync(`./dist/uploadInfo/mock-${component}.json`, JSON.stringify(mock))
+    })
   })
 
+// // 获取mock数据
+// program
+//   .command('getProps')
+//   .description('get mock data from "packages/example" folder by cli')
+//   .action(() => {
+//     const component = 'myButton'
+//     const getProps = require('./lib/getProps.js')
+//     let props = getProps('./packages/myButton/src/index.vue')
+//     fs.writeFileSync(`./dist/uploadInfo/props-${component}.json`, JSON.stringify(props))
+//   })
 
 program.on('--help', () => {
 })
