@@ -27,6 +27,7 @@
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "highlight.js": "^10.4.0",
+    "inquirer": "^7.3.3",
     "json-templater": "^1.2.0",
     "marked": "^1.2.5",
     "minimist": "^1.2.5",

@@ -21,11 +21,10 @@ const program = require('commander')
 
 // 创建文件夹
 program
-  .command('create')
+  .command('create [dirs...]')
   .description('create a new component folder by cli')
-  .action(() => {
-    const componentNames = minimist(process.argv.slice(3))._
-    require('./lib/createFolder')(componentNames)
+  .action((dirs) => {
+    require('./lib/createFolder')(dirs)
   })
 
 // 创建入口文件
@@ -48,10 +47,16 @@ program
 // 获取mock数据
 program
   .command('getInfo')
-  .description('get data from "packages/example & packages/src/index.vue" folder by cli')
+  .description('get data from "packages/example & packages/src" folder by cli')
   .action(() => {
     const getMockData = require('./lib/getMockData')
     const getProps = require('./lib/getProps.js')
+    if (!fs.existsSync('./dist')){
+      fs.mkdirSync('./dist')
+    }
+    if (!fs.existsSync('./dist/uploadInfo')) {
+      fs.mkdirSync('./dist/uploadInfo')
+    }
 
     const components = fs.readdirSync('./packages').filter(folderName => {
       if (/^\./.test(folderName)) {
@@ -67,17 +72,6 @@ program
       fs.writeFileSync(`./dist/uploadInfo/mock-${component}.json`, JSON.stringify(mock))
     })
   })
-
-// // 获取mock数据
-// program
-//   .command('getProps')
-//   .description('get mock data from "packages/example" folder by cli')
-//   .action(() => {
-//     const component = 'myButton'
-//     const getProps = require('./lib/getProps.js')
-//     let props = getProps('./packages/myButton/src/index.vue')
-//     fs.writeFileSync(`./dist/uploadInfo/props-${component}.json`, JSON.stringify(props))
-//   })
 
 program.on('--help', () => {
 })
