@@ -38,10 +38,13 @@ program
 
 // 创建入口文件
 program
-  .command('docs')
+  .command('docs [name]')
   .description('create docs by cli')
-  .action(() => {
-    require('./lib/createDocs')
+  .action((name) => {
+    if (name == 'all'){
+      name = undefined
+    }
+    require('./lib/createDocs')(name)
   })
 
 // 获取mock数据
@@ -51,7 +54,7 @@ program
   .action(() => {
     const getMockData = require('./lib/getMockData')
     const getProps = require('./lib/getProps.js')
-    if (!fs.existsSync('./dist')){
+    if (!fs.existsSync('./dist')) {
       fs.mkdirSync('./dist')
     }
     if (!fs.existsSync('./dist/uploadInfo')) {
