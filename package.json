@@ -1,6 +1,6 @@
 {
   "name": "vue-sfc-component-cli-loader",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "vue单文件组件开发脚手架webpack-loader",
   "main": "index.js",
   "bin": "create.js",
