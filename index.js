@@ -33,6 +33,7 @@ function writeFile (content, name) {
     delete content.customData
     content.name = name
     content.test = ""
+    content.testReport = ""
     content.repositoryName = remote
     content.repositoryUrl = `https://code.vipkid.com.cn/${remote}.git`
     baseInfo[name] = content
