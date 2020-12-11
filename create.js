@@ -24,7 +24,6 @@ program
   .command('create [dirs...]')
   .description('create a new component folder by cli')
   .action((dirs) => {
-    console.log(dirs)
     require('./lib/createFolder')(dirs)
   })
 
