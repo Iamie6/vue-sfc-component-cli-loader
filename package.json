@@ -1,6 +1,6 @@
 {
   "name": "vue-sfc-component-cli-loader",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "vue单文件组件开发脚手架webpack-loader",
   "main": "index.js",
   "bin": "create.js",
@@ -28,6 +28,7 @@
     "commander": "^6.2.0",
     "highlight.js": "^10.4.0",
     "inquirer": "^7.3.3",
+    "inquirer-table-prompt": "^0.2.1",
     "json-templater": "^1.2.0",
     "log4js": "^6.3.0",
     "marked": "^1.2.5",
@@ -37,5 +38,7 @@
     "uppercamelcase": "^3.0.0",
     "vue-template-compiler": "^2.6.12"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "json5": "^2.1.3"
+  }
 }
