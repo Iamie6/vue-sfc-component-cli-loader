@@ -7,13 +7,22 @@ module.exports = function () {
   const remote = execSync(repositoryCommand).toString()
   const user = execSync(userCommand).toString()
   const repositoryName = remote.match(/\.com\.cn(:\d+)?\/(.*)\.git/)
+  const domain = remote.replace(/\.com\.cn(:\d+)?\/(.*)\.git/, '') + '.com.cn'
   if (repositoryName && repositoryName.length>1) {
-    return repositoryName[2]
+    return  { 
+      name: repositoryName[2],
+      domain: domain,
+      url: remote
+    }
   } else {
     if (!user) {
       console.log(chalk.red('目前的仓库需要关联远程仓库。 \n 或者通过git config --global user.name "username" 添加用户名'))
       process.exit(1)
     }
-    return `mit/${user}`
+    return {
+      name: `${user}`,
+      domain: 'mit',
+      url: `mit/${user}`
+    }
   }
 }
