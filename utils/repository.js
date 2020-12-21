@@ -4,7 +4,14 @@ const userCommand = 'git config user.name'
 const chalk = require('chalk')
 
 module.exports = function () {
-  const remote = execSync(repositoryCommand).toString()
+  const remote = execSync(repositoryCommand).toString().split('\n').filter(url => {
+    if (/^origin/.test(url)){
+      return true
+    }
+    return false
+  }).map(url => {
+    return url.replace(/^origin/, '').replace(/\(fetch\)$/, '')
+  })[0].trim()
   const user = execSync(userCommand).toString()
   const repositoryName = remote.match(/\.com\.cn(:\d+)?\/(.*)\.git/)
   const domain = remote.replace(/\.com\.cn(:\d+)?\/(.*)\.git/, '') + '.com.cn'
