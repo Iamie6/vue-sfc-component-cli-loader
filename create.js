@@ -3,6 +3,7 @@
 const chalk = require('chalk')
 const semver = require('semver')
 const requiredVersion = '>=8.9'
+const packageFolderName = './packages'
 
 function checkNodeVersion (wanted) {
   if (!semver.satisfies(process.version, wanted, { includePrerelease: true })) {
@@ -18,6 +19,20 @@ checkNodeVersion(requiredVersion)
 const fs = require('fs')
 const minimist = require('minimist')
 const program = require('commander')
+function getFileNames (names) {
+  if (!names) {
+    names = []
+  } else if (!Array.isArray(names)){
+      names = [names]
+  }
+  if (names.length === 0) {
+      names = fs.readdirSync(packageFolderName).filter(name => {
+          if(/^\./.test(name)) return false
+          return true
+      })
+  }
+  return names
+}
 
 // 创建文件夹
 program
@@ -27,53 +42,115 @@ program
     require('./lib/createFolder')(dirs)
   })
 
-// 创建入口文件
+// 创建文档
 program
-  .command('entry')
-  .description('create entry.js by cli')
-  .action(() => {
-    require('./lib/packageAndExampleList')
-    require('./lib/entry')
-  })
-
-// 创建入口文件
-program
-  .command('docs [name]')
+  .command('docs [names...]')
   .description('create docs by cli')
-  .action((name) => {
-    if (name == 'all'){
-      name = undefined
-    }
-    require('./lib/createDocs')(name)
+  .action((names) => {
+    require('./lib/docs/docs-creator.js')(getFileNames(names))
   })
 
-// 获取mock数据
+// docs server
 program
-  .command('getInfo')
-  .description('get data from "packages/example & packages/src" folder by cli')
-  .action(() => {
-    const getMockData = require('./lib/getMockData')
-    const getProps = require('./lib/getProps.js')
-    if (!fs.existsSync('./dist')) {
-      fs.mkdirSync('./dist')
-    }
-    if (!fs.existsSync('./dist/uploadInfo')) {
-      fs.mkdirSync('./dist/uploadInfo')
-    }
+  .command('docs-server [names...]')
+  .description('docs-server by cli')
+  .action((names) => {
+    require('./lib/docs/docs-server.js')(getFileNames(names))
+  })
 
-    const components = fs.readdirSync('./packages').filter(folderName => {
-      if (/^\./.test(folderName)) {
-        return false
-      }
-      return true
-    })
-    components.map(component => {
-      const example = fs.readdirSync(`./packages/${component}/example`)[0]
-      const mock = getMockData(`./packages/${component}/example/${example}`)
-      const props = getProps(`./packages/${component}/src/index.vue`)
-      fs.writeFileSync(`./dist/uploadInfo/props-${component}.json`, JSON.stringify(props))
-      fs.writeFileSync(`./dist/uploadInfo/mock-${component}.json`, JSON.stringify(mock))
-    })
+// props 收集
+program
+  .command('props [names...]')
+  .description('props by cli')
+  .action((names) => {
+    require('./lib/infoCollection/getProps.js')(getFileNames(names))
+  })
+
+// mock 收集
+program
+  .command('mockdata [names...]')
+  .description('mockdata by cli')
+  .action((names) => {
+    require('./lib/infoCollection/getMockData.js')(getFileNames(names))
+  })
+
+// baseInfo 收集
+program
+  .command('baseInfo [names...]')
+  .description('baseInfo by cli')
+  .action(names => {
+    require('./lib/infoCollection/baseInfo.js')(getFileNames(names))
+  })
+
+// custom 收集
+program
+  .command('customData [names...]')
+  .description('custom by cli')
+  .action(names => {
+    require('./lib/infoCollection/customData.js')(getFileNames(names))
+  })
+
+// 创建入口文件
+program
+  .command('entry [names...]')
+  .description('create entry.js by cli')
+  .action(names => {
+    require('./lib/entry.js')(getFileNames(names))
+  })
+
+// 创建example对应列表
+program
+  .command('examples [names...]')
+  .description('create examples by cli')
+  .action(names => {
+    require('./lib/dev/packageAndExampleList.js')(getFileNames(names))
+  })
+
+//TODO testInfo 
+program
+  .command('testInfo [names...]')
+  .description('testInfo by cli')
+  .action((names) => {
+    console.log(names)
+  })
+
+//TODO test
+program
+  .command('test [names...]')
+  .description('test components by cli')
+  .action((names) => {
+    console.log(names)
+  })
+
+// build
+program
+  .command('build [names...]')
+  .option('-e, --entry', '自定义组件库总入口文件(/src/index.js)')
+  .option('-u, --upload <path>', 'upload配置参数')
+  .description('build components by cli')
+  .action((names, cmdObj) => {
+    const option = cleanArgs(cmdObj)
+    names = getFileNames(names)
+    require('./lib/build/preBuild')()
+    if (!option.entry) {
+      require('./lib/entry')(names)
+    }
+    require('./lib/docs/docs-creator.js')(names)
+    require('./lib/infoCollection/getProps.js')(names)
+    require('./lib/infoCollection/customData.js')(names)
+    require('./lib/infoCollection/getMockData.js')(names)
+    require('./lib/infoCollection/baseInfo.js')(names)
+  })
+
+// dev
+program
+  .command('dev [names...]')
+  .description('dev  by cli')
+  .action(names => {
+    names = getFileNames(names)
+    require('./lib/entry')(names, 'dev')
+    require('./lib/dev/packageAndExampleList.js')(names)
+    require('./lib/docs/docs-server.js')(names)
   })
 
 program.on('--help', () => {
